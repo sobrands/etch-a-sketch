@@ -19,18 +19,30 @@ function refreshGrid(num1) {
     createGrid(num1);
 }
 
-function fillBlack(e) {
+function fillColor(e) {
     if (e.target.className === "grid") {
-        e.target.style.backgroundColor = "black";
+        if (e.target.style.backgroundColor) {
+            let currentColor = e.target.style.backgroundColor.match(/\d+/g);
+            currentColor.forEach((color, index, arr) => {
+                arr[index] = parseInt(color * 0.9);
+            });
+            e.target.style.backgroundColor = `rgb(${currentColor[0]}, ${currentColor[1]}, ${currentColor[2]})`;
+            return;
+        }
+        colors.forEach((color, index, arr) => {
+            arr[index] = Math.floor(Math.random() * 256);
+        });
+        e.target.style.backgroundColor = `rgb(${colors[0]}, ${colors[1]}, ${colors[2]})`;
     }
 }
 
 createGrid(16);
 let mouseHold = false;
+let colors = [0,0,0];
 
 const container = document.querySelector(".container");
 container.addEventListener("mousedown", (e) => {
-    fillBlack(e);
+    fillColor(e);
     mouseHold = true;
 });
 
@@ -39,7 +51,7 @@ container.addEventListener("mouseup", () => {
 })
 
 container.addEventListener("mouseover", (e) => {
-    if (mouseHold) fillBlack(e);
+    if (mouseHold) fillColor(e);
 })
 
 const refreshButton = document.querySelector("div#reset");
